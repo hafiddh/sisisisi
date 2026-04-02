@@ -11,6 +11,7 @@ const navItems = [
   { label: "Dashboard", href: "/publik" },
   { label: "Capaian SAKIP", href: "/publik/sakip" },
   { label: "Analisis Jabatan", href: "/publik/anjab" },
+  { label: "Login", href: "/publik/login" },
 ];
 
 export function PublicNavbar() {
@@ -49,14 +50,7 @@ export function PublicNavbar() {
           ))}
         </nav>
 
-        {/* Login Button */}
-        <div className="hidden items-center gap-3 md:flex">
-          <Link href="/publik/login">
-            <Button variant="outline" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground">
-              Masuk
-            </Button>
-          </Link>
-        </div>
+        {/* Login Button - Hidden since it's in nav items */}
 
         {/* Mobile Toggle */}
         <Button
