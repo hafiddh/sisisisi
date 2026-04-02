@@ -1,47 +1,48 @@
 "use client";
 
-import { useState } from "react";
-import {
-  Building2,
-  Search,
-  Plus,
-  Eye,
-  Edit,
-  Trash2,
-  FileCheck,
-  FileX,
-  Clock,
-  Filter,
-} from "lucide-react";
-import { AppSidebar } from "@/components/app-sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { AdminPageHeader } from "@/components/admin-page-header";
+import { AdminPageShell } from "@/components/admin-page-shell";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 import { opdDetailList, type OPDDetail } from "@/lib/abk-data";
+import {
+    Building2,
+    Clock,
+    Edit,
+    Eye,
+    FileCheck,
+    FileX,
+    Filter,
+    Plus,
+    Search,
+    Trash2
+} from "lucide-react";
+import { useState } from "react";
 
 function StatusBadge({ status }: { status: "belum" | "proses" | "selesai" }) {
   const variants = {
@@ -80,29 +81,44 @@ export default function DaftarOPDPage() {
     abkSelesai: opdDetailList.filter((o) => o.statusAbk === "selesai").length,
     totalPegawai: opdDetailList.reduce((sum, o) => sum + o.totalPegawai, 0),
   };
+  const activeFilters = [
+    search ? `Pencarian: ${search}` : null,
+    statusFilter !== "all" ? `Status: ${statusFilter}` : null,
+  ].filter((value): value is string => Boolean(value));
 
   return (
-    <div className="min-h-screen bg-background">
-      <AppSidebar />
-      <main className="lg:pl-72">
-        <div className="p-6 lg:p-8">
-          {/* Header */}
-          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Daftar OPD</h1>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Kelola data Organisasi Perangkat Daerah
+    <AdminPageShell>
+      <AdminPageHeader
+        icon={Building2}
+        eyebrow="Manajemen data OPD"
+        title="Kelola organisasi perangkat daerah dalam tampilan yang lebih rapi dan mudah dipindai."
+        description="Halaman daftar OPD kini mengikuti gaya admin baru, dengan ringkasan yang lebih jelas, filter yang lebih nyaman, dan area tabel yang terasa lebih modern."
+        actions={
+          <Button className="gap-2 rounded-xl shadow-lg shadow-primary/15">
+            <Plus className="h-4 w-4" />
+            Tambah OPD
+          </Button>
+        }
+        aside={
+          <>
+            <div className="rounded-3xl border border-border/70 bg-background/80 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                OPD aktif
               </p>
+              <p className="mt-3 text-3xl font-semibold text-foreground">{stats.total}</p>
             </div>
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" />
-              Tambah OPD
-            </Button>
-          </div>
+            <div className="rounded-3xl border border-border/70 bg-background/80 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                Pegawai terdata
+              </p>
+              <p className="mt-3 text-3xl font-semibold text-foreground">{stats.totalPegawai}</p>
+            </div>
+          </>
+        }
+      />
 
-          {/* Stats */}
-          <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Card>
+      <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-primary/10 p-3">
@@ -115,7 +131,7 @@ export default function DaftarOPDPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-emerald-100 p-3">
@@ -128,7 +144,7 @@ export default function DaftarOPDPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-accent/30 p-3">
@@ -141,7 +157,7 @@ export default function DaftarOPDPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-primary/10 p-3">
@@ -156,11 +172,28 @@ export default function DaftarOPDPage() {
             </Card>
           </div>
 
-          {/* Table */}
-          <Card>
-            <CardHeader className="border-b">
+          <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
+            <CardHeader className="border-b border-border/70">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <CardTitle className="text-lg">Data OPD</CardTitle>
+                <div>
+                  <CardTitle className="text-lg">Data OPD</CardTitle>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {activeFilters.length > 0 ? (
+                      activeFilters.map((filter) => (
+                        <Badge
+                          key={filter}
+                          className="rounded-full border border-primary/15 bg-primary/10 px-3 py-1 text-primary"
+                        >
+                          {filter}
+                        </Badge>
+                      ))
+                    ) : (
+                      <Badge className="rounded-full border border-border/80 bg-background/80 px-3 py-1 text-muted-foreground">
+                        Semua OPD aktif
+                      </Badge>
+                    )}
+                  </div>
+                </div>
                 <div className="flex flex-col gap-2 sm:flex-row">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -168,11 +201,11 @@ export default function DaftarOPDPage() {
                       placeholder="Cari OPD..."
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
-                      className="pl-9 sm:w-64"
+                      className="h-11 rounded-xl border-border/70 bg-background/80 pl-9 sm:w-64"
                     />
                   </div>
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-full sm:w-40">
+                    <SelectTrigger className="h-11 w-full rounded-xl border-border/70 bg-background/80 sm:w-40">
                       <Filter className="mr-2 h-4 w-4" />
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
@@ -183,6 +216,16 @@ export default function DaftarOPDPage() {
                       <SelectItem value="belum">Belum</SelectItem>
                     </SelectContent>
                   </Select>
+                  <Button
+                    variant="outline"
+                    className="h-11 rounded-xl border-border/70"
+                    onClick={() => {
+                      setSearch("");
+                      setStatusFilter("all");
+                    }}
+                  >
+                    Reset
+                  </Button>
                 </div>
               </div>
             </CardHeader>
@@ -203,7 +246,7 @@ export default function DaftarOPDPage() {
                   </TableHeader>
                   <TableBody>
                     {filteredData.map((opd) => (
-                      <TableRow key={opd.id}>
+                      <TableRow key={opd.id} className="transition-colors hover:bg-muted/30">
                         <TableCell className="font-mono text-sm">{opd.kode}</TableCell>
                         <TableCell>
                           <div>
@@ -309,8 +352,6 @@ export default function DaftarOPDPage() {
               </div>
             </CardContent>
           </Card>
-        </div>
-      </main>
-    </div>
+    </AdminPageShell>
   );
 }

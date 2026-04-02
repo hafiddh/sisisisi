@@ -1,48 +1,50 @@
 "use client";
 
-import { useState } from "react";
-import {
-  Building2,
-  Users,
-  ChevronDown,
-  ChevronRight,
-  Search,
-  Download,
-  Printer,
-} from "lucide-react";
-import { AppSidebar } from "@/components/app-sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AdminPageHeader } from "@/components/admin-page-header";
+import { AdminPageShell } from "@/components/admin-page-shell";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { daftarOPD, strukturOrganisasiList, type StrukturOrganisasi } from "@/lib/abk-data";
 import { cn } from "@/lib/utils";
+import {
+    Building2,
+    ChevronDown,
+    ChevronRight,
+    Download,
+    GitBranchPlus,
+    Printer,
+    UserCheck,
+    Users,
+} from "lucide-react";
+import { useState } from "react";
 
 interface OrgNodeProps {
   node: StrukturOrganisasi;
-  children?: StrukturOrganisasi[];
   allNodes: StrukturOrganisasi[];
-  isExpanded: boolean;
+  expandedNodes: Set<string>;
   onToggle: (id: string) => void;
 }
 
-function OrgNode({ node, allNodes, isExpanded, onToggle }: OrgNodeProps) {
+function OrgNode({ node, allNodes, expandedNodes, onToggle }: OrgNodeProps) {
   const childNodes = allNodes.filter((n) => n.parentId === node.id);
   const hasChildren = childNodes.length > 0;
+  const isExpanded = expandedNodes.has(node.id);
 
   return (
     <div className="relative">
       <div
         className={cn(
-          "flex items-center gap-3 rounded-lg border bg-card p-4 transition-all hover:shadow-md",
-          node.level === 1 && "border-primary bg-primary/5",
-          node.level === 2 && "border-accent bg-accent/10",
-          node.level === 3 && "border-border"
+          "flex items-center gap-3 rounded-3xl border border-white/60 bg-card/85 p-4 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur transition-all hover:-translate-y-0.5 hover:shadow-[0_24px_80px_-36px_rgba(15,23,42,0.55)]",
+          node.level === 1 && "border-primary/25 bg-primary/10",
+          node.level === 2 && "border-accent/35 bg-accent/10",
+          node.level >= 3 && "border-border/70"
         )}
       >
         {hasChildren && (
@@ -80,7 +82,7 @@ function OrgNode({ node, allNodes, isExpanded, onToggle }: OrgNodeProps) {
               key={child.id}
               node={child}
               allNodes={allNodes}
-              isExpanded={isExpanded}
+              expandedNodes={expandedNodes}
               onToggle={onToggle}
             />
           ))}
@@ -100,6 +102,8 @@ export default function StrukturOrganisasiPage() {
   const rootNodes = filteredStruktur.filter((s) => !s.parentId);
 
   const selectedOpdData = daftarOPD.find((o) => o.id === selectedOpd);
+  const filledPositions = filteredStruktur.filter((item) => Boolean(item.nama)).length;
+  const emptyPositions = filteredStruktur.length - filledPositions;
 
   const toggleNode = (id: string) => {
     setExpandedNodes((prev) => {
@@ -122,38 +126,50 @@ export default function StrukturOrganisasiPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <AppSidebar />
-      <main className="lg:pl-72">
-        <div className="p-6 lg:p-8">
-          {/* Header */}
-          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Struktur Organisasi</h1>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Visualisasi struktur organisasi perangkat daerah
+    <AdminPageShell>
+      <AdminPageHeader
+        icon={GitBranchPlus}
+        eyebrow="Peta struktur OPD"
+        title="Pantau struktur organisasi tiap perangkat daerah dalam tampilan yang lebih informatif."
+        description="Visualisasi struktur kini memakai shell admin baru dengan ringkasan posisi terisi, kontrol expand yang lebih konsisten, dan kartu bagan yang terasa lebih modern."
+        actions={
+          <>
+            <Button variant="outline" className="gap-2 rounded-xl border-border/70 bg-background/80">
+              <Printer className="h-4 w-4" />
+              Cetak
+            </Button>
+            <Button variant="outline" className="gap-2 rounded-xl border-border/70 bg-background/80">
+              <Download className="h-4 w-4" />
+              Export
+            </Button>
+          </>
+        }
+        aside={
+          <>
+            <div className="rounded-3xl border border-border/70 bg-background/80 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                Posisi terdata
               </p>
+              <p className="mt-3 text-3xl font-semibold text-foreground">{filteredStruktur.length}</p>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" className="gap-2">
-                <Printer className="h-4 w-4" />
-                Cetak
-              </Button>
-              <Button variant="outline" className="gap-2">
-                <Download className="h-4 w-4" />
-                Export
-              </Button>
+            <div className="rounded-3xl border border-border/70 bg-background/80 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                Posisi terisi
+              </p>
+              <p className="mt-3 text-3xl font-semibold text-foreground">{filledPositions}</p>
             </div>
-          </div>
+          </>
+        }
+      />
 
           {/* Filter */}
-          <Card className="mb-6">
+          <Card className="mb-6 border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
             <CardContent className="pt-6">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                   <label className="text-sm font-medium text-foreground">Pilih OPD:</label>
                   <Select value={selectedOpd} onValueChange={setSelectedOpd}>
-                    <SelectTrigger className="w-full sm:w-80">
+                    <SelectTrigger className="h-11 w-full rounded-xl border-border/70 bg-background/80 sm:w-80">
                       <SelectValue placeholder="Pilih OPD" />
                     </SelectTrigger>
                     <SelectContent>
@@ -166,10 +182,10 @@ export default function StrukturOrganisasiPage() {
                   </Select>
                 </div>
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm" onClick={expandAll}>
+                  <Button variant="outline" size="sm" className="rounded-xl border-border/70 bg-background/80" onClick={expandAll}>
                     Expand All
                   </Button>
-                  <Button variant="outline" size="sm" onClick={collapseAll}>
+                  <Button variant="outline" size="sm" className="rounded-xl border-border/70 bg-background/80" onClick={collapseAll}>
                     Collapse All
                   </Button>
                 </div>
@@ -179,7 +195,7 @@ export default function StrukturOrganisasiPage() {
 
           {/* OPD Info */}
           {selectedOpdData && (
-            <Card className="mb-6 border-l-4 border-l-primary">
+            <Card className="mb-6 border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-primary/10 p-3">
@@ -188,8 +204,14 @@ export default function StrukturOrganisasiPage() {
                   <div>
                     <h2 className="text-xl font-bold text-foreground">{selectedOpdData.nama}</h2>
                     <p className="text-sm text-muted-foreground">
-                      Total {filteredStruktur.length} posisi jabatan
+                      Total {filteredStruktur.length} posisi jabatan, {emptyPositions} di antaranya belum terisi
                     </p>
+                  </div>
+                  <div className="ml-auto hidden rounded-2xl border border-border/70 bg-background/80 px-4 py-3 sm:block">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <UserCheck className="h-4 w-4 text-primary" />
+                      Tingkat keterisian {filteredStruktur.length > 0 ? Math.round((filledPositions / filteredStruktur.length) * 100) : 0}%
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -197,7 +219,7 @@ export default function StrukturOrganisasiPage() {
           )}
 
           {/* Org Chart */}
-          <Card>
+          <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5 text-primary" />
@@ -212,7 +234,7 @@ export default function StrukturOrganisasiPage() {
                       key={node.id}
                       node={node}
                       allNodes={filteredStruktur}
-                      isExpanded={expandedNodes.has(node.id)}
+                      expandedNodes={expandedNodes}
                       onToggle={toggleNode}
                     />
                   ))}
@@ -229,7 +251,7 @@ export default function StrukturOrganisasiPage() {
           </Card>
 
           {/* Legend */}
-          <Card className="mt-6">
+          <Card className="mt-6 border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
             <CardContent className="pt-6">
               <p className="mb-3 text-sm font-medium text-foreground">Keterangan:</p>
               <div className="flex flex-wrap gap-4">
@@ -248,8 +270,6 @@ export default function StrukturOrganisasiPage() {
               </div>
             </CardContent>
           </Card>
-        </div>
-      </main>
-    </div>
+    </AdminPageShell>
   );
 }

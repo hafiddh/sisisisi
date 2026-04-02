@@ -1,49 +1,50 @@
 "use client";
 
-import { useState } from "react";
-import {
-  ClipboardList,
-  Search,
-  Eye,
-  Edit,
-  Download,
-  GraduationCap,
-  Clock,
-  Award,
-  Shield,
-  Brain,
-  HeartPulse,
-  Building2,
-} from "lucide-react";
-import { AppSidebar } from "@/components/app-sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { AdminPageHeader } from "@/components/admin-page-header";
+import { AdminPageShell } from "@/components/admin-page-shell";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { jabatanDetailList, daftarOPD, type JabatanDetail } from "@/lib/abk-data";
-import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
 import { Progress } from "@/components/ui/progress";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import { daftarOPD, jabatanDetailList, type JabatanDetail } from "@/lib/abk-data";
+import {
+    Award,
+    Brain,
+    Building2,
+    ClipboardList,
+    Clock,
+    Download,
+    Edit,
+    Eye,
+    GraduationCap,
+    HeartPulse,
+    Search,
+    Shield,
+} from "lucide-react";
+import { useState } from "react";
 
 // Extended spesifikasi jabatan data
 const spesifikasiData = [
@@ -176,29 +177,47 @@ export default function SpesifikasiJabatanPage() {
     setSelectedJabatan(jabatan);
     setDetailOpen(true);
   };
+  const activeFilters = [
+    search ? `Pencarian: ${search}` : null,
+    opdFilter !== "all"
+      ? `OPD: ${daftarOPD.find((opd) => opd.id === opdFilter)?.nama ?? opdFilter}`
+      : null,
+  ].filter((value): value is string => Boolean(value));
 
   return (
-    <div className="min-h-screen bg-background">
-      <AppSidebar />
-      <main className="lg:pl-72">
-        <div className="p-6 lg:p-8">
-          {/* Header */}
-          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Spesifikasi Jabatan</h1>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Persyaratan pendidikan, pelatihan, dan kompetensi jabatan
+    <AdminPageShell>
+      <AdminPageHeader
+        icon={ClipboardList}
+        eyebrow="Spesifikasi jabatan"
+        title="Persyaratan pendidikan dan kompetensi jabatan kini tersaji lebih jelas."
+        description="Tampilan spesifikasi jabatan diselaraskan dengan desain admin baru agar proses telaah kebutuhan kompetensi, pengalaman, dan pelatihan terasa lebih cepat dipahami."
+        actions={
+          <Button variant="outline" className="gap-2 rounded-xl border-border/70 bg-background/80">
+            <Download className="h-4 w-4" />
+            Export
+          </Button>
+        }
+        aside={
+          <>
+            <div className="rounded-3xl border border-border/70 bg-background/80 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                Total jabatan
               </p>
+              <p className="mt-3 text-3xl font-semibold text-foreground">{jabatanDetailList.length}</p>
             </div>
-            <Button variant="outline" className="gap-2">
-              <Download className="h-4 w-4" />
-              Export
-            </Button>
-          </div>
+            <div className="rounded-3xl border border-border/70 bg-background/80 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                Pelatihan aktif
+              </p>
+              <p className="mt-3 text-3xl font-semibold text-foreground">24</p>
+            </div>
+          </>
+        }
+      />
 
           {/* Stats */}
           <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-primary/10 p-3">
@@ -211,7 +230,7 @@ export default function SpesifikasiJabatanPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-primary/10 p-3">
@@ -224,7 +243,7 @@ export default function SpesifikasiJabatanPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-accent/30 p-3">
@@ -237,7 +256,7 @@ export default function SpesifikasiJabatanPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-emerald-100 p-3">
@@ -253,7 +272,7 @@ export default function SpesifikasiJabatanPage() {
           </div>
 
           {/* Filter */}
-          <Card className="mb-6">
+          <Card className="mb-6 border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
             <CardContent className="pt-6">
               <div className="flex flex-col gap-4 sm:flex-row">
                 <div className="relative flex-1">
@@ -262,11 +281,11 @@ export default function SpesifikasiJabatanPage() {
                     placeholder="Cari jabatan..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
-                    className="pl-9"
+                    className="h-11 rounded-xl border-border/70 bg-background/80 pl-9"
                   />
                 </div>
                 <Select value={opdFilter} onValueChange={setOpdFilter}>
-                  <SelectTrigger className="w-full sm:w-64">
+                  <SelectTrigger className="h-11 w-full rounded-xl border-border/70 bg-background/80 sm:w-64">
                     <SelectValue placeholder="Filter OPD" />
                   </SelectTrigger>
                   <SelectContent>
@@ -279,19 +298,35 @@ export default function SpesifikasiJabatanPage() {
                   </SelectContent>
                 </Select>
               </div>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {activeFilters.length > 0 ? (
+                  activeFilters.map((filter) => (
+                    <Badge
+                      key={filter}
+                      className="rounded-full border border-primary/15 bg-primary/10 px-3 py-1 text-primary"
+                    >
+                      {filter}
+                    </Badge>
+                  ))
+                ) : (
+                  <Badge className="rounded-full border border-border/80 bg-background/80 px-3 py-1 text-muted-foreground">
+                    Semua spesifikasi jabatan aktif
+                  </Badge>
+                )}
+              </div>
             </CardContent>
           </Card>
 
           {/* Table */}
-          <Card>
-            <CardHeader className="border-b">
+          <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
+            <CardHeader className="border-b border-border/70">
               <CardTitle className="text-lg">Daftar Spesifikasi Jabatan</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow>
+                    <TableRow className="border-border/70 hover:bg-transparent">
                       <TableHead>Kode</TableHead>
                       <TableHead>Nama Jabatan</TableHead>
                       <TableHead>OPD</TableHead>
@@ -302,7 +337,7 @@ export default function SpesifikasiJabatanPage() {
                   </TableHeader>
                   <TableBody>
                     {filteredData.map((jabatan) => (
-                      <TableRow key={jabatan.id} className="cursor-pointer hover:bg-muted/50" onClick={() => openDetail(jabatan)}>
+                      <TableRow key={jabatan.id} className="cursor-pointer border-border/60 hover:bg-background/80" onClick={() => openDetail(jabatan)}>
                         <TableCell className="font-mono text-sm">{jabatan.kodeJabatan}</TableCell>
                         <TableCell>
                           <div>
@@ -506,8 +541,6 @@ export default function SpesifikasiJabatanPage() {
               )}
             </DialogContent>
           </Dialog>
-        </div>
-      </main>
-    </div>
+    </AdminPageShell>
   );
 }

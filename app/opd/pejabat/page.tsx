@@ -1,49 +1,50 @@
 "use client";
 
-import { useState } from "react";
-import {
-  Users,
-  Search,
-  Plus,
-  Eye,
-  Edit,
-  Trash2,
-  Filter,
-  Download,
-  UserCircle,
-  Building2,
-  GraduationCap,
-  Calendar,
-} from "lucide-react";
-import { AppSidebar } from "@/components/app-sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { AdminPageHeader } from "@/components/admin-page-header";
+import { AdminPageShell } from "@/components/admin-page-shell";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { pejabatList, daftarOPD, type Pejabat } from "@/lib/abk-data";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import { daftarOPD, pejabatList, type Pejabat } from "@/lib/abk-data";
+import {
+    Building2,
+    Calendar,
+    Download,
+    Edit,
+    Eye,
+    Filter,
+    GraduationCap,
+    Plus,
+    Search,
+    Trash2,
+    UserCircle,
+    Users,
+} from "lucide-react";
+import { useState } from "react";
 
 function EselonBadge({ eselon }: { eselon: string }) {
   const colors: Record<string, string> = {
@@ -81,35 +82,55 @@ export default function DataPejabatPage() {
     eselon3: pejabatList.filter((p) => p.eselon.startsWith("III")).length,
     eselon4: pejabatList.filter((p) => p.eselon.startsWith("IV")).length,
   };
+  const activeFilters = [
+    search ? `Pencarian: ${search}` : null,
+    opdFilter !== "all"
+      ? `OPD: ${daftarOPD.find((opd) => opd.id === opdFilter)?.nama ?? opdFilter}`
+      : null,
+  ].filter((value): value is string => Boolean(value));
 
   return (
-    <div className="min-h-screen bg-background">
-      <AppSidebar />
-      <main className="lg:pl-72">
-        <div className="p-6 lg:p-8">
-          {/* Header */}
-          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Data Pejabat</h1>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Kelola data pejabat struktural perangkat daerah
+    <AdminPageShell>
+      <AdminPageHeader
+        icon={Users}
+        eyebrow="Master pejabat daerah"
+        title="Kelola data pejabat struktural dengan tampilan yang lebih rapi dan mudah dipantau."
+        description="Halaman data pejabat sekarang mengikuti bahasa visual admin baru, dengan ringkasan eselon, filter yang lebih jelas, dan area tabel yang lebih nyaman dibaca."
+        actions={
+          <>
+            <Button variant="outline" className="gap-2 rounded-xl border-border/70 bg-background/80">
+              <Download className="h-4 w-4" />
+              Export
+            </Button>
+            <Button className="gap-2 rounded-xl shadow-lg shadow-primary/15">
+              <Plus className="h-4 w-4" />
+              Tambah Pejabat
+            </Button>
+          </>
+        }
+        aside={
+          <>
+            <div className="rounded-3xl border border-border/70 bg-background/80 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                Pejabat aktif
+              </p>
+              <p className="mt-3 text-3xl font-semibold text-foreground">{stats.total}</p>
+            </div>
+            <div className="rounded-3xl border border-border/70 bg-background/80 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                Eselon II dan III
+              </p>
+              <p className="mt-3 text-3xl font-semibold text-foreground">
+                {stats.eselon2 + stats.eselon3}
               </p>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" className="gap-2">
-                <Download className="h-4 w-4" />
-                Export
-              </Button>
-              <Button className="gap-2">
-                <Plus className="h-4 w-4" />
-                Tambah Pejabat
-              </Button>
-            </div>
-          </div>
+          </>
+        }
+      />
 
           {/* Stats */}
           <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-primary/10 p-3">
@@ -122,7 +143,7 @@ export default function DataPejabatPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-primary/10 p-3">
@@ -135,7 +156,7 @@ export default function DataPejabatPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-accent/30 p-3">
@@ -148,7 +169,7 @@ export default function DataPejabatPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-muted p-3">
@@ -164,10 +185,28 @@ export default function DataPejabatPage() {
           </div>
 
           {/* Table */}
-          <Card>
-            <CardHeader className="border-b">
+          <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
+            <CardHeader className="border-b border-border/70">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <CardTitle className="text-lg">Daftar Pejabat</CardTitle>
+                <div>
+                  <CardTitle className="text-lg">Daftar Pejabat</CardTitle>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {activeFilters.length > 0 ? (
+                      activeFilters.map((filter) => (
+                        <Badge
+                          key={filter}
+                          className="rounded-full border border-primary/15 bg-primary/10 px-3 py-1 text-primary"
+                        >
+                          {filter}
+                        </Badge>
+                      ))
+                    ) : (
+                      <Badge className="rounded-full border border-border/80 bg-background/80 px-3 py-1 text-muted-foreground">
+                        Menampilkan seluruh pejabat terdata
+                      </Badge>
+                    )}
+                  </div>
+                </div>
                 <div className="flex flex-col gap-2 sm:flex-row">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -175,11 +214,11 @@ export default function DataPejabatPage() {
                       placeholder="Cari nama/NIP..."
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
-                      className="pl-9 sm:w-64"
+                      className="h-11 rounded-xl border-border/70 bg-background/80 pl-9 sm:w-64"
                     />
                   </div>
                   <Select value={opdFilter} onValueChange={setOpdFilter}>
-                    <SelectTrigger className="w-full sm:w-48">
+                    <SelectTrigger className="h-11 w-full rounded-xl border-border/70 bg-background/80 sm:w-56">
                       <Filter className="mr-2 h-4 w-4" />
                       <SelectValue placeholder="Filter OPD" />
                     </SelectTrigger>
@@ -199,7 +238,7 @@ export default function DataPejabatPage() {
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow>
+                    <TableRow className="border-border/70 hover:bg-transparent">
                       <TableHead>NIP</TableHead>
                       <TableHead>Nama</TableHead>
                       <TableHead>Jabatan</TableHead>
@@ -211,7 +250,7 @@ export default function DataPejabatPage() {
                   </TableHeader>
                   <TableBody>
                     {filteredData.map((pejabat) => (
-                      <TableRow key={pejabat.id}>
+                      <TableRow key={pejabat.id} className="border-border/60 hover:bg-background/80">
                         <TableCell className="font-mono text-sm">{pejabat.nip}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-3">
@@ -318,8 +357,6 @@ export default function DataPejabatPage() {
               </div>
             </CardContent>
           </Card>
-        </div>
-      </main>
-    </div>
+    </AdminPageShell>
   );
 }

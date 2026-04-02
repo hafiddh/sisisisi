@@ -773,6 +773,13 @@ export interface StrukturOrganisasi {
 
 export const strukturOrganisasiList: StrukturOrganisasi[] = [
   { id: "SO001", opdId: "OPD001", jabatan: "Kepala Badan", nama: "Dr. H. Ahmad Fauzi, M.Si", nip: "196512101990031001", level: 1 },
+  { id: "SO002", opdId: "OPD001", jabatan: "Sekretaris", nama: "Drs. H. Sukardi, M.M.", nip: "197205101997031003", parentId: "SO001", level: 2 },
+  { id: "SO003", opdId: "OPD001", jabatan: "Kepala Bidang Perencanaan", nama: "Hj. Dewi Sartika, S.E., M.Ak.", nip: "198001201999032004", parentId: "SO001", level: 2 },
+  { id: "SO004", opdId: "OPD001", jabatan: "Kepala Bidang Pengendalian", nama: "Ir. Hendra Wijaya, M.T.", nip: "197508151999031001", parentId: "SO001", level: 2 },
+  { id: "SO005", opdId: "OPD001", jabatan: "Kepala Bidang Penelitian", nama: "Dr. Ratna Sari, M.Si", nip: "198003202005012001", parentId: "SO001", level: 2 },
+  { id: "SO006", opdId: "OPD001", jabatan: "Kasubag Umum", nama: "Sri Wahyuni, S.E.", nip: "198505102010012002", parentId: "SO002", level: 3 },
+  { id: "SO007", opdId: "OPD001", jabatan: "Kasubag Keuangan", nama: "Andi Pratama, S.E., M.Ak.", nip: "198708152012011003", parentId: "SO002", level: 3 },
+  { id: "SO008", opdId: "OPD001", jabatan: "Kasubag Program", nama: "Rina Susanti, S.Sos.", nip: "198901202015012001", parentId: "SO002", level: 3 },
 ];
 
 // SAKIP Data
@@ -993,12 +1000,4 @@ export const nilaiSAKIPList: NilaiSAKIP[] = [
     reviewedAt: "2024-03-03",
     reviewedBy: "Tim Inspektorat",
   },
-];
-  { id: "SO002", opdId: "OPD001", jabatan: "Sekretaris", nama: "Drs. H. Sukardi, M.M.", nip: "197205101997031003", parentId: "SO001", level: 2 },
-  { id: "SO003", opdId: "OPD001", jabatan: "Kepala Bidang Perencanaan", nama: "Hj. Dewi Sartika, S.E., M.Ak.", nip: "198001201999032004", parentId: "SO001", level: 2 },
-  { id: "SO004", opdId: "OPD001", jabatan: "Kepala Bidang Pengendalian", nama: "Ir. Hendra Wijaya, M.T.", nip: "197508151999031001", parentId: "SO001", level: 2 },
-  { id: "SO005", opdId: "OPD001", jabatan: "Kepala Bidang Penelitian", nama: "Dr. Ratna Sari, M.Si", nip: "198003202005012001", parentId: "SO001", level: 2 },
-  { id: "SO006", opdId: "OPD001", jabatan: "Kasubag Umum", nama: "Sri Wahyuni, S.E.", nip: "198505102010012002", parentId: "SO002", level: 3 },
-  { id: "SO007", opdId: "OPD001", jabatan: "Kasubag Keuangan", nama: "Andi Pratama, S.E., M.Ak.", nip: "198708152012011003", parentId: "SO002", level: 3 },
-  { id: "SO008", opdId: "OPD001", jabatan: "Kasubag Program", nama: "Rina Susanti, S.Sos.", nip: "198901202015012001", parentId: "SO002", level: 3 },
-];
+]; 

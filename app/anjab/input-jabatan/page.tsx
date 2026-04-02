@@ -1,49 +1,50 @@
 "use client";
 
-import { useState } from "react";
-import {
-  Users,
-  Search,
-  Plus,
-  Eye,
-  Edit,
-  Trash2,
-  Filter,
-  FileText,
-  Briefcase,
-  Building2,
-} from "lucide-react";
-import { AppSidebar } from "@/components/app-sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { AdminPageHeader } from "@/components/admin-page-header";
+import { AdminPageShell } from "@/components/admin-page-shell";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { jabatanDetailList, daftarOPD, type JabatanDetail } from "@/lib/abk-data";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import { Textarea } from "@/components/ui/textarea";
+import { daftarOPD, jabatanDetailList } from "@/lib/abk-data";
+import {
+    Briefcase,
+    Building2,
+    Edit,
+    Eye,
+    FileText,
+    Plus,
+    Search,
+    Sparkles,
+    Trash2,
+    Users
+} from "lucide-react";
+import { useState } from "react";
 
 function JenisBadge({ jenis }: { jenis: "struktural" | "fungsional" | "pelaksana" }) {
   const variants = {
@@ -92,23 +93,55 @@ export default function InputJabatanPage() {
     fungsional: jabatanDetailList.filter((j) => j.jenisJabatan === "fungsional").length,
     pelaksana: jabatanDetailList.filter((j) => j.jenisJabatan === "pelaksana").length,
   };
+  const activeFilters = [
+    search ? `Pencarian: ${search}` : null,
+    opdFilter !== "all"
+      ? `OPD: ${daftarOPD.find((opd) => opd.id === opdFilter)?.nama ?? opdFilter}`
+      : null,
+    jenisFilter !== "all" ? `Jenis: ${jenisFilter}` : null,
+  ].filter((value): value is string => Boolean(value));
 
   return (
-    <div className="min-h-screen bg-background">
-      <AppSidebar />
-      <main className="lg:pl-72">
-        <div className="p-6 lg:p-8">
-          {/* Header */}
-          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+    <AdminPageShell>
+      <AdminPageHeader
+        icon={Briefcase}
+        eyebrow="Manajemen data jabatan"
+        title="Susun data jabatan dengan tampilan yang lebih rapi, cepat dicari, dan siap dipakai untuk Anjab."
+        description="Form penambahan jabatan, statistik, dan tabel kini mengikuti shell admin baru agar proses input data jabatan terasa konsisten dengan modul lain."
+        actions={
+          <Badge className="rounded-full border border-border/80 bg-background/80 px-3 py-2 text-muted-foreground">
+            <Sparkles className="mr-2 h-4 w-4 text-primary" />
+            Data siap untuk analisis lanjutan
+          </Badge>
+        }
+        aside={
+          <>
+            <div className="rounded-3xl border border-border/70 bg-background/80 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                Total jabatan
+              </p>
+              <p className="mt-3 text-3xl font-semibold text-foreground">{stats.total}</p>
+            </div>
+            <div className="rounded-3xl border border-border/70 bg-background/80 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                Struktur organisasi
+              </p>
+              <p className="mt-3 text-3xl font-semibold text-foreground">{stats.struktural}</p>
+            </div>
+          </>
+        }
+      />
+
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">Input Data Jabatan</h1>
+              <h2 className="text-2xl font-bold text-foreground">Input Data Jabatan</h2>
               <p className="mt-1 text-sm text-muted-foreground">
                 Kelola data jabatan untuk analisis jabatan
               </p>
             </div>
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
-                <Button className="gap-2">
+                <Button className="gap-2 rounded-xl shadow-lg shadow-primary/15">
                   <Plus className="h-4 w-4" />
                   Tambah Jabatan
                 </Button>
@@ -201,9 +234,8 @@ export default function InputJabatanPage() {
             </Dialog>
           </div>
 
-          {/* Stats */}
           <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-primary/10 p-3">
@@ -216,7 +248,7 @@ export default function InputJabatanPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-primary/10 p-3">
@@ -229,7 +261,7 @@ export default function InputJabatanPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-accent/30 p-3">
@@ -242,7 +274,7 @@ export default function InputJabatanPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-muted p-3">
@@ -257,11 +289,28 @@ export default function InputJabatanPage() {
             </Card>
           </div>
 
-          {/* Table */}
-          <Card>
-            <CardHeader className="border-b">
+          <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
+            <CardHeader className="border-b border-border/70">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <CardTitle className="text-lg">Data Jabatan</CardTitle>
+                <div>
+                  <CardTitle className="text-lg">Data Jabatan</CardTitle>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {activeFilters.length > 0 ? (
+                      activeFilters.map((filter) => (
+                        <Badge
+                          key={filter}
+                          className="rounded-full border border-primary/15 bg-primary/10 px-3 py-1 text-primary"
+                        >
+                          {filter}
+                        </Badge>
+                      ))
+                    ) : (
+                      <Badge className="rounded-full border border-border/80 bg-background/80 px-3 py-1 text-muted-foreground">
+                        Semua jabatan aktif
+                      </Badge>
+                    )}
+                  </div>
+                </div>
                 <div className="flex flex-col gap-2 sm:flex-row">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -269,11 +318,11 @@ export default function InputJabatanPage() {
                       placeholder="Cari jabatan..."
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
-                      className="pl-9 sm:w-56"
+                      className="h-11 rounded-xl border-border/70 bg-background/80 pl-9 sm:w-56"
                     />
                   </div>
                   <Select value={opdFilter} onValueChange={setOpdFilter}>
-                    <SelectTrigger className="w-full sm:w-40">
+                    <SelectTrigger className="h-11 w-full rounded-xl border-border/70 bg-background/80 sm:w-40">
                       <SelectValue placeholder="Filter OPD" />
                     </SelectTrigger>
                     <SelectContent>
@@ -286,7 +335,7 @@ export default function InputJabatanPage() {
                     </SelectContent>
                   </Select>
                   <Select value={jenisFilter} onValueChange={setJenisFilter}>
-                    <SelectTrigger className="w-full sm:w-36">
+                    <SelectTrigger className="h-11 w-full rounded-xl border-border/70 bg-background/80 sm:w-36">
                       <SelectValue placeholder="Filter Jenis" />
                     </SelectTrigger>
                     <SelectContent>
@@ -296,6 +345,17 @@ export default function InputJabatanPage() {
                       <SelectItem value="pelaksana">Pelaksana</SelectItem>
                     </SelectContent>
                   </Select>
+                  <Button
+                    variant="outline"
+                    className="h-11 rounded-xl border-border/70"
+                    onClick={() => {
+                      setSearch("");
+                      setOpdFilter("all");
+                      setJenisFilter("all");
+                    }}
+                  >
+                    Reset
+                  </Button>
                 </div>
               </div>
             </CardHeader>
@@ -315,7 +375,7 @@ export default function InputJabatanPage() {
                   </TableHeader>
                   <TableBody>
                     {filteredData.map((jabatan) => (
-                      <TableRow key={jabatan.id}>
+                      <TableRow key={jabatan.id} className="transition-colors hover:bg-muted/30">
                         <TableCell className="font-mono text-sm">{jabatan.kodeJabatan}</TableCell>
                         <TableCell>
                           <div>
@@ -353,8 +413,6 @@ export default function InputJabatanPage() {
               </div>
             </CardContent>
           </Card>
-        </div>
-      </main>
-    </div>
+    </AdminPageShell>
   );
 }

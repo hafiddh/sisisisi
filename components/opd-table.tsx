@@ -3,27 +3,27 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Eye, Pencil, MoreHorizontal } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import { Eye, MoreHorizontal, Pencil } from "lucide-react";
 
 const opdData = [
   {
@@ -98,8 +98,8 @@ function StatusBadge({ status }: { status: string }) {
 
 export function OPDTable() {
   return (
-    <Card>
-      <CardHeader>
+    <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
+      <CardHeader className="border-b border-border/70">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <CardTitle>Daftar OPD</CardTitle>
@@ -107,7 +107,7 @@ export function OPDTable() {
               Data Organisasi Perangkat Daerah dan status kelengkapan dokumen
             </CardDescription>
           </div>
-          <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
+          <Button className="rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/15 hover:bg-primary/90">
             + Tambah OPD
           </Button>
         </div>
@@ -123,15 +123,15 @@ export function OPDTable() {
                 <TableHead className="hidden sm:table-cell">Pegawai</TableHead>
                 <TableHead>Anjab</TableHead>
                 <TableHead>ABK</TableHead>
-                <TableHead className="w-[50px]"></TableHead>
+                <TableHead className="w-12.5"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {opdData.map((opd) => (
-                <TableRow key={opd.id}>
+                <TableRow key={opd.id} className="transition-colors hover:bg-muted/30">
                   <TableCell className="font-medium">{opd.nama}</TableCell>
                   <TableCell>
-                    <Badge variant="outline">{opd.jenis}</Badge>
+                    <Badge variant="outline" className="rounded-full">{opd.jenis}</Badge>
                   </TableCell>
                   <TableCell className="hidden md:table-cell">
                     {opd.pejabat}

@@ -1,56 +1,57 @@
 "use client";
 
-import { useState } from "react";
-import {
-  FileText,
-  Search,
-  Plus,
-  Eye,
-  Edit,
-  Trash2,
-  Download,
-  CheckCircle,
-  Clock,
-  AlertCircle,
-  FileWarning,
-  Building2,
-  Calendar,
-  User,
-  Filter,
-  Printer,
-  Send,
-} from "lucide-react";
-import { AppSidebar } from "@/components/app-sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { AdminPageHeader } from "@/components/admin-page-header";
+import { AdminPageShell } from "@/components/admin-page-shell";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogFooter,
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { dokumenAnjabList, daftarOPD, type DokumenAnjab } from "@/lib/abk-data";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import { daftarOPD, dokumenAnjabList, type DokumenAnjab } from "@/lib/abk-data";
+import {
+    AlertCircle,
+    Building2,
+    Calendar,
+    CheckCircle,
+    Clock,
+    Download,
+    Edit,
+    Eye,
+    FileText,
+    FileWarning,
+    Filter,
+    Plus,
+    Printer,
+    Search,
+    Send,
+    Trash2,
+    User,
+} from "lucide-react";
+import { useState } from "react";
 
 function StatusBadge({ status }: { status: DokumenAnjab["status"] }) {
   const variants = {
@@ -94,76 +95,92 @@ export default function DokumenAnjabPage() {
     setSelectedDokumen(doc);
     setDetailOpen(true);
   };
+  const activeFilters = [
+    search ? `Pencarian: ${search}` : null,
+    statusFilter !== "all" ? `Status: ${statusFilter}` : null,
+  ].filter((value): value is string => Boolean(value));
 
   return (
-    <div className="min-h-screen bg-background">
-      <AppSidebar />
-      <main className="lg:pl-72">
-        <div className="p-6 lg:p-8">
-          {/* Header */}
-          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Dokumen Anjab</h1>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Kelola dokumen analisis jabatan per OPD
-              </p>
-            </div>
-            <Dialog open={createOpen} onOpenChange={setCreateOpen}>
-              <DialogTrigger asChild>
-                <Button className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  Buat Dokumen
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Buat Dokumen Anjab Baru</DialogTitle>
-                </DialogHeader>
-                <div className="grid gap-4 py-4">
-                  <div className="space-y-2">
-                    <Label>OPD</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Pilih OPD" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {daftarOPD.map((opd) => (
-                          <SelectItem key={opd.id} value={opd.id}>
-                            {opd.nama}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Periode</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Pilih periode" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="2024">2024</SelectItem>
-                        <SelectItem value="2025">2025</SelectItem>
-                        <SelectItem value="2026">2026</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Nomor Dokumen</Label>
-                    <Input placeholder="DOK/ANJAB/XXX/2024" />
-                  </div>
+    <AdminPageShell>
+      <AdminPageHeader
+        icon={FileText}
+        eyebrow="Dokumen analisis jabatan"
+        title="Kelola siklus dokumen Anjab dengan tampilan yang lebih modern dan terarah."
+        description="Area dokumen sekarang memakai shell admin baru, lengkap dengan status yang lebih mudah dipindai, filter yang lebih nyaman, dan aksi pembuatan dokumen yang lebih menonjol."
+        actions={
+          <Dialog open={createOpen} onOpenChange={setCreateOpen}>
+            <DialogTrigger asChild>
+              <Button className="gap-2 rounded-xl shadow-lg shadow-primary/15">
+                <Plus className="h-4 w-4" />
+                Buat Dokumen
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Buat Dokumen Anjab Baru</DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="space-y-2">
+                  <Label>OPD</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pilih OPD" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {daftarOPD.map((opd) => (
+                        <SelectItem key={opd.id} value={opd.id}>
+                          {opd.nama}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setCreateOpen(false)}>Batal</Button>
-                  <Button onClick={() => setCreateOpen(false)}>Buat Dokumen</Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
+                <div className="space-y-2">
+                  <Label>Periode</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Pilih periode" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="2024">2024</SelectItem>
+                      <SelectItem value="2025">2025</SelectItem>
+                      <SelectItem value="2026">2026</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Nomor Dokumen</Label>
+                  <Input placeholder="DOK/ANJAB/XXX/2024" />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setCreateOpen(false)}>Batal</Button>
+                <Button onClick={() => setCreateOpen(false)}>Buat Dokumen</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        }
+        aside={
+          <>
+            <div className="rounded-3xl border border-border/70 bg-background/80 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                Total dokumen
+              </p>
+              <p className="mt-3 text-3xl font-semibold text-foreground">{stats.total}</p>
+            </div>
+            <div className="rounded-3xl border border-border/70 bg-background/80 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                Siap disahkan
+              </p>
+              <p className="mt-3 text-3xl font-semibold text-foreground">{stats.review + stats.disetujui}</p>
+            </div>
+          </>
+        }
+      />
 
           {/* Stats */}
           <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-primary/10 p-3">
@@ -176,7 +193,7 @@ export default function DokumenAnjabPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-muted p-3">
@@ -189,7 +206,7 @@ export default function DokumenAnjabPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-accent/30 p-3">
@@ -202,7 +219,7 @@ export default function DokumenAnjabPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-emerald-100 p-3">
@@ -218,10 +235,28 @@ export default function DokumenAnjabPage() {
           </div>
 
           {/* Table */}
-          <Card>
-            <CardHeader className="border-b">
+          <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
+            <CardHeader className="border-b border-border/70">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <CardTitle className="text-lg">Daftar Dokumen</CardTitle>
+                <div>
+                  <CardTitle className="text-lg">Daftar Dokumen</CardTitle>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {activeFilters.length > 0 ? (
+                      activeFilters.map((filter) => (
+                        <Badge
+                          key={filter}
+                          className="rounded-full border border-primary/15 bg-primary/10 px-3 py-1 text-primary"
+                        >
+                          {filter}
+                        </Badge>
+                      ))
+                    ) : (
+                      <Badge className="rounded-full border border-border/80 bg-background/80 px-3 py-1 text-muted-foreground">
+                        Menampilkan seluruh dokumen Anjab
+                      </Badge>
+                    )}
+                  </div>
+                </div>
                 <div className="flex flex-col gap-2 sm:flex-row">
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -229,11 +264,11 @@ export default function DokumenAnjabPage() {
                       placeholder="Cari dokumen..."
                       value={search}
                       onChange={(e) => setSearch(e.target.value)}
-                      className="pl-9 sm:w-64"
+                      className="h-11 rounded-xl border-border/70 bg-background/80 pl-9 sm:w-64"
                     />
                   </div>
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-full sm:w-40">
+                    <SelectTrigger className="h-11 w-full rounded-xl border-border/70 bg-background/80 sm:w-44">
                       <Filter className="mr-2 h-4 w-4" />
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
@@ -252,7 +287,7 @@ export default function DokumenAnjabPage() {
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader>
-                    <TableRow>
+                    <TableRow className="border-border/70 hover:bg-transparent">
                       <TableHead>No. Dokumen</TableHead>
                       <TableHead>OPD</TableHead>
                       <TableHead>Periode</TableHead>
@@ -264,7 +299,7 @@ export default function DokumenAnjabPage() {
                   </TableHeader>
                   <TableBody>
                     {filteredData.map((doc) => (
-                      <TableRow key={doc.id} className="cursor-pointer hover:bg-muted/50" onClick={() => openDetail(doc)}>
+                      <TableRow key={doc.id} className="cursor-pointer border-border/60 hover:bg-background/80" onClick={() => openDetail(doc)}>
                         <TableCell className="font-mono text-sm">{doc.nomorDokumen}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
@@ -417,8 +452,6 @@ export default function DokumenAnjabPage() {
               )}
             </DialogContent>
           </Dialog>
-        </div>
-      </main>
-    </div>
+    </AdminPageShell>
   );
 }

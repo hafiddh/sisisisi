@@ -1,44 +1,44 @@
 "use client";
 
-import { useState } from "react";
-import {
-  FileText,
-  Download,
-  Printer,
-  Building2,
-  BarChart3,
-  Users,
-  FileCheck,
-  Calendar,
-  Filter,
-  Eye,
-  TrendingUp,
-  TrendingDown,
-  Minus,
-  PieChart,
-} from "lucide-react";
-import { AppSidebar } from "@/components/app-sidebar";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { AdminPageHeader } from "@/components/admin-page-header";
+import { AdminPageShell } from "@/components/admin-page-shell";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { daftarOPD, opdDetailList, dokumenAnjabList, dummyLaporan } from "@/lib/abk-data";
-import { Progress } from "@/components/ui/progress";
+import { dokumenAnjabList, dummyLaporan, opdDetailList } from "@/lib/abk-data";
+import {
+    BarChart3,
+    Building2,
+    Calendar,
+    Download,
+    Eye,
+    FileText,
+    Filter,
+    Minus,
+    Printer,
+    Sparkles,
+    TrendingDown,
+    TrendingUp,
+    Users
+} from "lucide-react";
+import { useState } from "react";
 
 // Summary stats
 const summaryStats = {
@@ -69,39 +69,54 @@ export default function LaporanPage() {
   const persentaseAbk = (summaryStats.abkSelesai / summaryStats.totalOPD) * 100;
 
   return (
-    <div className="min-h-screen bg-background">
-      <AppSidebar />
-      <main className="lg:pl-72">
-        <div className="p-6 lg:p-8">
-          {/* Header */}
-          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Laporan</h1>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Rekap laporan analisis jabatan dan beban kerja
+    <AdminPageShell>
+      <AdminPageHeader
+        icon={FileText}
+        eyebrow="Pusat laporan dan rekap"
+        title="Pantau ringkasan Anjab dan ABK dengan tampilan laporan admin yang lebih matang."
+        description="Filter, progres, dan tab laporan kini berada dalam bahasa visual yang sama dengan dashboard admin, sehingga pembacaan rekap menjadi lebih nyaman."
+        actions={
+          <>
+            <Button variant="outline" className="gap-2 rounded-xl border-border/70 bg-background/80">
+              <Printer className="h-4 w-4" />
+              Cetak
+            </Button>
+            <Button className="gap-2 rounded-xl shadow-lg shadow-primary/15">
+              <Download className="h-4 w-4" />
+              Export PDF
+            </Button>
+          </>
+        }
+        aside={
+          <>
+            <div className="rounded-3xl border border-border/70 bg-background/80 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                Kebutuhan total
               </p>
+              <p className="mt-3 text-3xl font-semibold text-foreground">{summaryStats.kebutuhanTotal}</p>
+              <p className="mt-1 text-sm text-muted-foreground">kebutuhan pegawai</p>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" className="gap-2">
-                <Printer className="h-4 w-4" />
-                Cetak
-              </Button>
-              <Button className="gap-2">
-                <Download className="h-4 w-4" />
-                Export PDF
-              </Button>
+            <div className="rounded-3xl border border-border/70 bg-background/80 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                Selisih pegawai
+              </p>
+              <p className="mt-3 text-3xl font-semibold text-foreground">
+                {selisihPegawai > 0 ? `+${selisihPegawai}` : selisihPegawai}
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">dibanding kebutuhan</p>
             </div>
-          </div>
+          </>
+        }
+      />
 
-          {/* Filters */}
-          <Card className="mb-6">
+      <Card className="mb-6 border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
             <CardContent className="pt-6">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm font-medium">Periode:</span>
                   <Select value={periode} onValueChange={setPeriode}>
-                    <SelectTrigger className="w-32">
+                    <SelectTrigger className="h-11 w-32 rounded-xl border-border/70 bg-background/80">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -115,7 +130,7 @@ export default function LaporanPage() {
                   <Filter className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm font-medium">Jenis Laporan:</span>
                   <Select value={reportType} onValueChange={setReportType}>
-                    <SelectTrigger className="w-48">
+                    <SelectTrigger className="h-11 w-48 rounded-xl border-border/70 bg-background/80">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -126,13 +141,16 @@ export default function LaporanPage() {
                     </SelectContent>
                   </Select>
                 </div>
+                <Badge className="w-fit rounded-full border border-primary/15 bg-primary/10 px-3 py-2 text-primary">
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  Periode aktif {periode}
+                </Badge>
               </div>
             </CardContent>
           </Card>
 
-          {/* Summary Stats */}
           <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-primary/10 p-3">
@@ -145,7 +163,7 @@ export default function LaporanPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-primary/10 p-3">
@@ -158,7 +176,7 @@ export default function LaporanPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className="rounded-lg bg-accent/30 p-3">
@@ -171,7 +189,7 @@ export default function LaporanPage() {
                 </div>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardContent className="pt-6">
                 <div className="flex items-center gap-4">
                   <div className={`rounded-lg p-3 ${selisihPegawai < 0 ? "bg-destructive/10" : selisihPegawai > 0 ? "bg-emerald-100" : "bg-muted"}`}>
@@ -194,9 +212,8 @@ export default function LaporanPage() {
             </Card>
           </div>
 
-          {/* Progress Cards */}
           <div className="mb-6 grid gap-4 sm:grid-cols-2">
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <FileText className="h-5 w-5 text-primary" />
@@ -231,7 +248,7 @@ export default function LaporanPage() {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <BarChart3 className="h-5 w-5 text-accent-foreground" />
@@ -267,7 +284,6 @@ export default function LaporanPage() {
             </Card>
           </div>
 
-          {/* Tabs for different reports */}
           <Tabs defaultValue="rekap-opd" className="space-y-4">
             <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:grid-cols-none">
               <TabsTrigger value="rekap-opd" className="gap-2">
@@ -289,8 +305,8 @@ export default function LaporanPage() {
 
             {/* Rekap per OPD */}
             <TabsContent value="rekap-opd">
-              <Card>
-                <CardHeader className="border-b">
+              <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
+                <CardHeader className="border-b border-border/70">
                   <CardTitle className="text-lg">Rekapitulasi per OPD</CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
@@ -311,7 +327,7 @@ export default function LaporanPage() {
                       </TableHeader>
                       <TableBody>
                         {rekapPerOPD.map((opd, index) => (
-                          <TableRow key={opd.id}>
+                          <TableRow key={opd.id} className="transition-colors hover:bg-muted/30">
                             <TableCell>{index + 1}</TableCell>
                             <TableCell className="font-medium">{opd.nama}</TableCell>
                             <TableCell className="text-center">{opd.totalJabatan}</TableCell>
@@ -370,8 +386,8 @@ export default function LaporanPage() {
 
             {/* Dokumen Anjab */}
             <TabsContent value="dokumen-anjab">
-              <Card>
-                <CardHeader className="border-b">
+              <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
+                <CardHeader className="border-b border-border/70">
                   <CardTitle className="text-lg">Daftar Dokumen Anjab</CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
@@ -390,7 +406,7 @@ export default function LaporanPage() {
                       </TableHeader>
                       <TableBody>
                         {dokumenAnjabList.map((doc, index) => (
-                          <TableRow key={doc.id}>
+                          <TableRow key={doc.id} className="transition-colors hover:bg-muted/30">
                             <TableCell>{index + 1}</TableCell>
                             <TableCell className="font-mono text-sm">{doc.nomorDokumen}</TableCell>
                             <TableCell className="font-medium">{doc.namaOpd}</TableCell>
@@ -433,8 +449,8 @@ export default function LaporanPage() {
 
             {/* Laporan ABK */}
             <TabsContent value="laporan-abk">
-              <Card>
-                <CardHeader className="border-b">
+              <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
+                <CardHeader className="border-b border-border/70">
                   <CardTitle className="text-lg">Laporan ABK per OPD</CardTitle>
                 </CardHeader>
                 <CardContent className="p-0">
@@ -455,7 +471,7 @@ export default function LaporanPage() {
                       </TableHeader>
                       <TableBody>
                         {dummyLaporan.map((lap, index) => (
-                          <TableRow key={lap.opdId}>
+                          <TableRow key={lap.opdId} className="transition-colors hover:bg-muted/30">
                             <TableCell>{index + 1}</TableCell>
                             <TableCell className="font-medium">{lap.namaOpd}</TableCell>
                             <TableCell>{lap.periode}</TableCell>
@@ -500,8 +516,6 @@ export default function LaporanPage() {
               </Card>
             </TabsContent>
           </Tabs>
-        </div>
-      </main>
-    </div>
+    </AdminPageShell>
   );
 }

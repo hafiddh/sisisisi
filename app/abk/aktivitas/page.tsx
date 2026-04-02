@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { ClipboardList, FileSpreadsheet, Upload, Download } from "lucide-react";
-import { AppSidebar } from "@/components/app-sidebar";
 import { AktivitasForm, AktivitasFormData } from "@/components/abk/aktivitas-form";
 import { AktivitasTable } from "@/components/abk/aktivitas-table";
+import { AdminPageHeader } from "@/components/admin-page-header";
+import { AdminPageShell } from "@/components/admin-page-shell";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Aktivitas, dummyAktivitas, daftarJabatan } from "@/lib/abk-data";
+import { Aktivitas, daftarJabatan, dummyAktivitas } from "@/lib/abk-data";
+import { ClipboardList, Download, FileSpreadsheet, Upload } from "lucide-react";
+import { useState } from "react";
 
 export default function InputAktivitasPage() {
   const [aktivitasList, setAktivitasList] = useState<Aktivitas[]>(dummyAktivitas);
@@ -32,29 +34,50 @@ export default function InputAktivitasPage() {
     setAktivitasList(aktivitasList.filter((a) => a.id !== id));
   };
 
+  const totalJabatan = new Set(aktivitasList.map((a) => a.jabatanId)).size;
+
   return (
-    <div className="flex min-h-screen bg-background">
-      <AppSidebar />
-
-      <main className="flex-1 lg:ml-72">
-        {/* Header */}
-        <header className="sticky top-0 z-30 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <div className="flex h-16 items-center gap-4 px-4 sm:px-6 lg:px-8">
-            <div className="flex-1">
-              <h1 className="text-lg font-semibold sm:text-xl">Input Aktivitas Kerja</h1>
-              <p className="text-sm text-muted-foreground">
-                Kelola data aktivitas kerja untuk perhitungan beban kerja
+    <AdminPageShell>
+      <AdminPageHeader
+        icon={ClipboardList}
+        eyebrow="Input aktivitas kerja"
+        title="Susun aktivitas kerja sebagai fondasi utama perhitungan ABK yang lebih akurat."
+        description="Form dan tabel aktivitas disusun ulang dalam shell admin yang konsisten agar proses input, import, dan review data terasa lebih cepat."
+        actions={
+          <>
+            <Button variant="outline" className="gap-2 rounded-xl border-border/70 bg-background/80">
+              <Upload className="h-4 w-4" />
+              Import Excel
+            </Button>
+            <Button className="gap-2 rounded-xl shadow-lg shadow-primary/15">
+              <Download className="h-4 w-4" />
+              Export Data
+            </Button>
+          </>
+        }
+        aside={
+          <>
+            <div className="rounded-3xl border border-border/70 bg-background/80 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                Total aktivitas
               </p>
+              <p className="mt-3 text-3xl font-semibold text-foreground">{aktivitasList.length}</p>
+              <p className="mt-1 text-sm text-muted-foreground">aktivitas terdaftar</p>
             </div>
-          </div>
-        </header>
+            <div className="rounded-3xl border border-border/70 bg-background/80 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-muted-foreground">
+                Jabatan tercakup
+              </p>
+              <p className="mt-3 text-3xl font-semibold text-foreground">{totalJabatan}</p>
+              <p className="mt-1 text-sm text-muted-foreground">jabatan berbeda</p>
+            </div>
+          </>
+        }
+      />
 
-        {/* Content */}
-        <div className="p-4 sm:p-6 lg:p-8">
-          <div className="space-y-6">
-            {/* Quick Actions */}
+      <div className="space-y-6">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <Card className="border-primary/20 bg-primary/5">
+              <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium">
                     <ClipboardList className="h-4 w-4 text-primary" />
@@ -67,7 +90,7 @@ export default function InputAktivitasPage() {
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center gap-2 text-sm font-medium">
                     <FileSpreadsheet className="h-4 w-4 text-accent-foreground" />
@@ -82,21 +105,21 @@ export default function InputAktivitasPage() {
                 </CardContent>
               </Card>
 
-              <Card className="sm:col-span-2 lg:col-span-2">
+              <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur sm:col-span-2 lg:col-span-2">
                 <CardHeader className="pb-2">
                   <CardTitle className="text-sm font-medium">Aksi Cepat</CardTitle>
                   <CardDescription>Import/Export data aktivitas</CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-wrap gap-2">
-                  <Button variant="outline" size="sm" className="gap-2">
+                  <Button variant="outline" size="sm" className="gap-2 rounded-xl border-border/70 bg-background/80">
                     <Upload className="h-4 w-4" />
                     Import Excel
                   </Button>
-                  <Button variant="outline" size="sm" className="gap-2">
+                  <Button variant="outline" size="sm" className="gap-2 rounded-xl border-border/70 bg-background/80">
                     <Download className="h-4 w-4" />
                     Export Excel
                   </Button>
-                  <Button variant="outline" size="sm" className="gap-2">
+                  <Button variant="outline" size="sm" className="gap-2 rounded-xl border-border/70 bg-background/80">
                     <Download className="h-4 w-4" />
                     Download Template
                   </Button>
@@ -104,8 +127,7 @@ export default function InputAktivitasPage() {
               </Card>
             </div>
 
-            {/* Main Content */}
-            <Card>
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <CardTitle>Daftar Aktivitas Kerja</CardTitle>
@@ -123,10 +145,14 @@ export default function InputAktivitasPage() {
               </CardContent>
             </Card>
 
-            {/* Info Card */}
-            <Card className="border-accent/50 bg-accent/5">
+            <Card className="border-white/60 bg-card/85 shadow-[0_16px_50px_-36px_rgba(15,23,42,0.45)] backdrop-blur">
               <CardHeader>
-                <CardTitle className="text-sm font-medium">Panduan Input Aktivitas</CardTitle>
+                <div className="flex items-center justify-between gap-3">
+                  <CardTitle className="text-sm font-medium">Panduan Input Aktivitas</CardTitle>
+                  <Badge className="rounded-full border border-accent/30 bg-accent/10 text-accent-foreground">
+                    4 langkah
+                  </Badge>
+                </div>
               </CardHeader>
               <CardContent className="space-y-2 text-sm text-muted-foreground">
                 <p>
@@ -143,9 +169,7 @@ export default function InputAktivitasPage() {
                 </p>
               </CardContent>
             </Card>
-          </div>
-        </div>
-      </main>
-    </div>
+      </div>
+    </AdminPageShell>
   );
 }
